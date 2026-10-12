@@ -16,10 +16,10 @@ from .config import config
 logger = logging.getLogger("ai_service")
 logging.basicConfig(level=logging.INFO)
 
-# モデル選択肢の識別子
-PLAYER_GPT = "GPT-Luna-high"
-PLAYER_GEMINI = "Gemini3.8flash-high"
-PLAYER_CLAUDE = "ClaudeSonnet5"
+# モデル選択肢の識別子 (公式モデル名・表記に統一)
+PLAYER_GPT = "GPT-6-Luna"
+PLAYER_GEMINI = "Gemini 3.8 Flash"
+PLAYER_CLAUDE = "Claude Sonnet 5"
 PLAYER_JEV = "JEV"
 
 SUPPORTED_PLAYERS = [
@@ -27,6 +27,11 @@ SUPPORTED_PLAYERS = [
     PLAYER_GEMINI,
     PLAYER_CLAUDE,
     PLAYER_JEV,
+    # 互換用旧識別子
+    "GPT-Luna-high",
+    "Gemini3.8flash-high",
+    "Gemini3.8flash",
+    "ClaudeSonnet5",
 ]
 
 def build_shogi_context(
@@ -136,13 +141,13 @@ class AIService:
         reason = ""
 
         try:
-            if player_name == PLAYER_JEV:
+            if player_name == PLAYER_JEV or "JEV" in player_name:
                 result_usi, reason, raw_response = await self._call_jev(state_text, criteria_dict, legal_moves)
-            elif player_name == PLAYER_GPT:
+            elif player_name == PLAYER_GPT or "GPT" in player_name:
                 result_usi, reason, raw_response = await self._call_openai(state_text, legal_moves_text, legal_moves)
-            elif player_name == PLAYER_GEMINI:
+            elif player_name == PLAYER_GEMINI or "Gemini" in player_name:
                 result_usi, reason, raw_response = await self._call_gemini(state_text, legal_moves_text, legal_moves)
-            elif player_name == PLAYER_CLAUDE:
+            elif player_name == PLAYER_CLAUDE or "Claude" in player_name:
                 result_usi, reason, raw_response = await self._call_claude(state_text, legal_moves_text, legal_moves)
             else:
                 raise ValueError(f"未対応のプレイヤーです: {player_name}")

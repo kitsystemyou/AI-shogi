@@ -51,7 +51,7 @@ const state = {
   currentSfen: INITIAL_SFEN,
   lastMoveUsi: null,
   sentePlayer: "JEV",
-  gotePlayer: "Gemini3.8flash-high",
+  gotePlayer: "Gemini 3.8 Flash",
   isLive: false,
 };
 

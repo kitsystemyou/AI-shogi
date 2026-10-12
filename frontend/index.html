@@ -60,9 +60,9 @@
               <span id="sente-status-badge" class="text-xs text-slate-400">キー状態確認中...</span>
             </div>
             <select id="sente-select" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2.5 text-sm font-medium focus:ring-2 focus:ring-amber-500 focus:outline-none">
-              <option value="GPT-Luna-high">GPT-Luna-high (OpenAI)</option>
-              <option value="Gemini3.8flash-high">Gemini3.8flash-high (Gemini)</option>
-              <option value="ClaudeSonnet5">ClaudeSonnet5 (Anthropic)</option>
+              <option value="GPT-6-Luna">GPT-6-Luna (OpenAI)</option>
+              <option value="Gemini 3.8 Flash">Gemini 3.8 Flash (Google Gemini)</option>
+              <option value="Claude Sonnet 5">Claude Sonnet 5 (Anthropic Claude)</option>
               <option value="JEV" selected>JEV (TypeSafe AI)</option>
             </select>
           </div>
@@ -84,9 +84,9 @@
               <span id="gote-status-badge" class="text-xs text-slate-400">キー状態確認中...</span>
             </div>
             <select id="gote-select" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2.5 text-sm font-medium focus:ring-2 focus:ring-amber-500 focus:outline-none">
-              <option value="GPT-Luna-high">GPT-Luna-high (OpenAI)</option>
-              <option value="Gemini3.8flash-high" selected>Gemini3.8flash-high (Gemini)</option>
-              <option value="ClaudeSonnet5">ClaudeSonnet5 (Anthropic)</option>
+              <option value="GPT-6-Luna">GPT-6-Luna (OpenAI)</option>
+              <option value="Gemini 3.8 Flash" selected>Gemini 3.8 Flash (Google Gemini)</option>
+              <option value="Claude Sonnet 5">Claude Sonnet 5 (Anthropic Claude)</option>
               <option value="JEV">JEV (TypeSafe AI)</option>
             </select>
           </div>
@@ -117,7 +117,7 @@
               </div>
               <div>
                 <div class="text-xs text-slate-400">後手</div>
-                <div id="board-gote-name" class="text-sm font-semibold text-slate-200">Gemini3.8flash-high</div>
+                <div id="board-gote-name" class="text-sm font-semibold text-slate-200">Gemini 3.8 Flash</div>
               </div>
             </div>
             <div class="flex flex-col items-end">
@@ -299,10 +299,10 @@
       </p>
 
       <div class="space-y-4 text-xs">
-        <!-- OpenAI (GPT-Luna-high) -->
+        <!-- OpenAI (GPT-6-Luna) -->
         <div class="space-y-1.5 p-3 rounded-xl bg-slate-950 border border-slate-800">
           <div class="flex items-center justify-between">
-            <label class="font-semibold text-slate-200">OpenAI API Key (GPT-Luna-high)</label>
+            <label class="font-semibold text-slate-200">OpenAI API Key (GPT-6-Luna)</label>
             <span id="cfg-openai-status" class="text-[11px] text-slate-500">未設定</span>
           </div>
           <input type="password" id="cfg-openai-key" placeholder="sk-..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs font-mono text-slate-200 focus:outline-none focus:ring-1 focus:ring-amber-500">
@@ -312,23 +312,23 @@
           </div>
         </div>
 
-        <!-- Google Gemini (Gemini3.8flash-high) -->
+        <!-- Google Gemini (Gemini 3.8 Flash) -->
         <div class="space-y-1.5 p-3 rounded-xl bg-slate-950 border border-slate-800">
           <div class="flex items-center justify-between">
-            <label class="font-semibold text-slate-200">Gemini API Key (Gemini3.8flash-high)</label>
+            <label class="font-semibold text-slate-200">Gemini API Key (Gemini 3.8 Flash)</label>
             <span id="cfg-gemini-status" class="text-[11px] text-slate-500">未設定</span>
           </div>
           <input type="password" id="cfg-gemini-key" placeholder="AIza..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs font-mono text-slate-200 focus:outline-none focus:ring-1 focus:ring-amber-500">
           <div class="flex gap-2 items-center text-slate-400 text-[11px] mt-1">
             <span>モデル名:</span>
-            <input type="text" id="cfg-gemini-model" value="gemini-3.8-flash-high" class="bg-slate-900 border border-slate-700 rounded px-2 py-0.5 text-xs font-mono text-slate-300">
+            <input type="text" id="cfg-gemini-model" value="gemini-3.8-flash" class="bg-slate-900 border border-slate-700 rounded px-2 py-0.5 text-xs font-mono text-slate-300">
           </div>
         </div>
 
-        <!-- Anthropic Claude (ClaudeSonnet5) -->
+        <!-- Anthropic Claude (Claude Sonnet 5) -->
         <div class="space-y-1.5 p-3 rounded-xl bg-slate-950 border border-slate-800">
           <div class="flex items-center justify-between">
-            <label class="font-semibold text-slate-200">Anthropic API Key (ClaudeSonnet5)</label>
+            <label class="font-semibold text-slate-200">Anthropic API Key (Claude Sonnet 5)</label>
             <span id="cfg-anthropic-status" class="text-[11px] text-slate-500">未設定</span>
           </div>
           <input type="password" id="cfg-anthropic-key" placeholder="sk-ant-..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs font-mono text-slate-200 focus:outline-none focus:ring-1 focus:ring-amber-500">

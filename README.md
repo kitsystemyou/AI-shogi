@@ -1,6 +1,6 @@
 # AI & JEV 将棋アリーナ (Shogi Arena)
 
-各社先端LLM（**GPT-6-Luna**, **Gemini3.8flash**, **ClaudeSonnet5**）および TypeSafe AI 社の判定特化型AI **JEV** に将棋を対戦させ、勝敗やリアルタイム進行、棋譜履歴を閲覧・再生できるWebアプリケーションです。
+各社先端LLM（**GPT-6-Luna**, **Gemini 3.8 Flash**, **Claude Sonnet 5**）および TypeSafe AI 社の判定特化型AI **JEV** に将棋を対戦させ、勝敗やリアルタイム進行、棋譜履歴を閲覧・再生できるWebアプリケーションです。
 
 ---
 
@@ -8,8 +8,8 @@
 
 1. **先手・後手の自由なマッチング**:
    - `GPT-6-Luna` (OpenAI)
-   - `Gemini3.8flash` (Google Gemini)
-   - `ClaudeSonnet5` (Anthropic Claude)
+   - `Gemini 3.8 Flash` (Google Gemini)
+   - `Claude Sonnet 5` (Anthropic Claude)
    - `JEV` (TypeSafe AI)
    上記の4つのAIモデルから先手・後手を自由に選択して対局を開始可能。
 
@@ -57,11 +57,11 @@ cp .env.example .env
 OPENAI_API_KEY=your_openai_api_key_here
 OPENAI_MODEL=gpt-6-luna
 
-# Google Gemini (Gemini3.8flash)
+# Google Gemini (Gemini 3.8 Flash)
 GEMINI_API_KEY=your_gemini_api_key_here
 GEMINI_MODEL=gemini-3.8-flash
 
-# Anthropic Claude (ClaudeSonnet5)
+# Anthropic Claude (Claude Sonnet 5)
 ANTHROPIC_API_KEY=your_anthropic_api_key_here
 ANTHROPIC_MODEL=claude-sonnet-5
 
@@ -71,7 +71,7 @@ JEV_MODEL=jev-latest
 JEV_ENDPOINT=https://api.typesafe.ai/v1/systemone
 ```
 ※APIキーはWeb画面上の「API設定」ボタンからも直接入力・保存が可能です。
-※`GPT-6-Luna` はアプリ内のプレイヤー名です。OpenAI に送信する実モデル名は `OPENAI_MODEL` で設定します（既定値: `gpt-6-luna`）。
+※各モデルに送信する実モデル名は環境変数（`OPENAI_MODEL`, `GEMINI_MODEL`, `ANTHROPIC_MODEL`, `JEV_MODEL`）で任意に切り替え可能です。
 
 ### 3. アプリケーションの起動
 
