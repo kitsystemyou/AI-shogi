@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI & JEV 将棋アリーナ | Shogi Arena</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-amber-600 selection:text-white">
+
+  <!-- ナビゲーションバー -->
+  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-600 to-amber-800 flex items-center justify-center shadow-lg shadow-amber-900/30 border border-amber-500/40">
+          <span class="text-2xl font-bold font-serif text-amber-100">将</span>
+        </div>
+        <div>
+          <h1 class="text-lg font-bold tracking-tight flex items-center gap-2">
+            AI & JEV 将棋アリーナ
+            <span class="text-xs px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 font-normal">v1.0</span>
+          </h1>
+          <p class="text-xs text-slate-400">LLM (GPT, Gemini, Claude) & TypeSafe AI JEV 自動対局・棋譜閲覧</p>
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-3">
+        <button id="tab-arena-btn" class="px-4 py-2 rounded-lg text-sm font-medium transition-colors bg-amber-600 text-white flex items-center gap-1.5 shadow-sm">
+          <i data-lucide="swords" class="w-4 h-4"></i> 対戦アリーナ
+        </button>
+        <button id="tab-history-btn" class="px-4 py-2 rounded-lg text-sm font-medium transition-colors text-slate-300 hover:text-white hover:bg-slate-800 flex items-center gap-1.5">
+          <i data-lucide="history" class="w-4 h-4"></i> 対戦履歴
+        </button>
+        <button id="open-config-btn" class="px-3 py-2 rounded-lg text-sm text-slate-300 hover:text-white hover:bg-slate-800 border border-slate-700/60 flex items-center gap-1.5 transition-colors">
+          <i data-lucide="settings" class="w-4 h-4"></i> API設定
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- メインコンテンツ -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 space-y-6">
+
+    <!-- 対戦アリーナ画面 -->
+    <div id="arena-view" class="space-y-6">
+      <!-- 対戦設定カード -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl">
+        <div class="flex flex-col lg:flex-row items-center justify-between gap-6">
+          <!-- 先手選択 -->
+          <div class="flex-1 w-full bg-slate-950/60 border border-slate-800 rounded-xl p-4 relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-1.5 h-full bg-red-500"></div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-semibold uppercase tracking-wider text-red-400 flex items-center gap-1">
+                <span class="w-2.5 h-2.5 rounded-sm bg-red-500 inline-block"></span> 先手 (▲)
+              </span>
+              <span id="sente-status-badge" class="text-xs text-slate-400">キー状態確認中...</span>
+            </div>
+            <select id="sente-select" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2.5 text-sm font-medium focus:ring-2 focus:ring-amber-500 focus:outline-none">
+              <option value="GPT-Luna-high">GPT-Luna-high (OpenAI)</option>
+              <option value="Gemini3.8flash-high">Gemini3.8flash-high (Gemini)</option>
+              <option value="ClaudeSonnet5">ClaudeSonnet5 (Anthropic)</option>
+              <option value="JEV" selected>JEV (TypeSafe AI)</option>
+            </select>
+          </div>
+
+          <!-- VS アイコン -->
+          <div class="flex flex-col items-center justify-center">
+            <div class="w-12 h-12 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center font-bold text-amber-500 text-sm shadow-inner">
+              VS
+            </div>
+          </div>
+
+          <!-- 後手選択 -->
+          <div class="flex-1 w-full bg-slate-950/60 border border-slate-800 rounded-xl p-4 relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-1.5 h-full bg-blue-500"></div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-semibold uppercase tracking-wider text-blue-400 flex items-center gap-1">
+                <span class="w-2.5 h-2.5 rounded-sm bg-blue-500 inline-block"></span> 後手 (△)
+              </span>
+              <span id="gote-status-badge" class="text-xs text-slate-400">キー状態確認中...</span>
+            </div>
+            <select id="gote-select" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2.5 text-sm font-medium focus:ring-2 focus:ring-amber-500 focus:outline-none">
+              <option value="GPT-Luna-high">GPT-Luna-high (OpenAI)</option>
+              <option value="Gemini3.8flash-high" selected>Gemini3.8flash-high (Gemini)</option>
+              <option value="ClaudeSonnet5">ClaudeSonnet5 (Anthropic)</option>
+              <option value="JEV">JEV (TypeSafe AI)</option>
+            </select>
+          </div>
+
+          <!-- 対局開始・停止ボタン -->
+          <div class="flex gap-3 w-full lg:w-auto">
+            <button id="start-match-btn" class="flex-1 lg:flex-none px-6 py-3.5 bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600 font-semibold rounded-xl text-white shadow-lg shadow-amber-900/30 transition-all flex items-center justify-center gap-2">
+              <i data-lucide="play" class="w-5 h-5 fill-current"></i> 対局開始
+            </button>
+            <button id="stop-match-btn" class="hidden px-5 py-3.5 bg-red-600/80 hover:bg-red-600 font-semibold rounded-xl text-white transition-all flex items-center justify-center gap-2">
+              <i data-lucide="square" class="w-4 h-4 fill-current"></i> 中断
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 対局盤面 & 棋譜エリア (2カラム) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+        <!-- 左カラム: 将棋盤・駒台 (8カラム) -->
+        <div class="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col items-center">
+
+          <!-- 盤面上部: 後手情報 & 後手持ち駒台 -->
+          <div class="w-full max-w-[520px] mb-3 bg-slate-950/80 border border-slate-800/80 rounded-xl p-3 flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-full bg-blue-500/20 border border-blue-500/40 flex items-center justify-center text-blue-300 font-bold text-xs">
+                △
+              </div>
+              <div>
+                <div class="text-xs text-slate-400">後手</div>
+                <div id="board-gote-name" class="text-sm font-semibold text-slate-200">Gemini3.8flash-high</div>
+              </div>
+            </div>
+            <div class="flex flex-col items-end">
+              <div class="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">持ち駒</div>
+              <div id="board-gote-hand" class="text-sm font-serif text-amber-300 min-h-[22px] flex items-center gap-1">
+                なし
+              </div>
+            </div>
+          </div>
+
+          <!-- 対戦ステータスバー -->
+          <div class="w-full max-w-[520px] mb-3 px-3 py-2 bg-slate-800/50 rounded-lg flex items-center justify-between text-xs border border-slate-700/50">
+            <div class="flex items-center gap-2">
+              <span id="turn-indicator" class="flex items-center gap-1.5 px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 font-medium">
+                <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+                <span id="current-turn-text">待機中</span>
+              </span>
+              <span id="move-count-text" class="text-slate-400 font-mono">0手目</span>
+            </div>
+            <div id="game-status-message" class="text-slate-300 font-medium truncate max-w-[260px]">
+              対戦を開始してください
+            </div>
+          </div>
+
+          <!-- 将棋盤本体 (木目風コンテナ) -->
+          <div class="shogi-board-container relative p-3 rounded-xl shadow-2xl border-2 border-amber-950/80">
+            <!-- 筋ラベル (9〜1) -->
+            <div class="grid grid-cols-9 text-center text-xs text-amber-950 font-bold mb-1 select-none pr-4">
+              <span>9</span><span>8</span><span>7</span><span>6</span><span>5</span><span>4</span><span>3</span><span>2</span><span>1</span>
+            </div>
+
+            <div class="flex">
+              <!-- 9x9 盤面グリッド -->
+              <div id="shogi-grid" class="shogi-grid grid grid-cols-9 bg-[#e8bc78] border-2 border-[#6d4c22] rounded shadow-inner">
+                <!-- 81マスがJSで動的生成されます -->
+              </div>
+
+              <!-- 段ラベル (一〜九) -->
+              <div class="flex flex-col justify-around text-xs text-amber-950 font-bold ml-1.5 select-none font-serif">
+                <span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>七</span><span>八</span><span>九</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 盤面下部: 先手情報 & 先手持ち駒台 -->
+          <div class="w-full max-w-[520px] mt-3 bg-slate-950/80 border border-slate-800/80 rounded-xl p-3 flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-full bg-red-500/20 border border-red-500/40 flex items-center justify-center text-red-300 font-bold text-xs">
+                ▲
+              </div>
+              <div>
+                <div class="text-xs text-slate-400">先手</div>
+                <div id="board-sente-name" class="text-sm font-semibold text-slate-200">JEV</div>
+              </div>
+            </div>
+            <div class="flex flex-col items-end">
+              <div class="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">持ち駒</div>
+              <div id="board-sente-hand" class="text-sm font-serif text-amber-300 min-h-[22px] flex items-center gap-1">
+                なし
+              </div>
+            </div>
+          </div>
+
+          <!-- 局面ナビゲーションバー (終了後/再生時) -->
+          <div class="w-full max-w-[520px] mt-4 pt-3 border-t border-slate-800 flex items-center justify-between text-sm">
+            <div class="flex items-center gap-1.5">
+              <button id="nav-first" title="初手" class="p-2 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 disabled:opacity-40">
+                <i data-lucide="chevrons-left" class="w-4 h-4"></i>
+              </button>
+              <button id="nav-prev" title="1手戻る" class="p-2 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 disabled:opacity-40">
+                <i data-lucide="chevron-left" class="w-4 h-4"></i>
+              </button>
+              <button id="nav-play" title="自動再生" class="p-2 rounded bg-amber-600/80 hover:bg-amber-600 text-white disabled:opacity-40">
+                <i data-lucide="play" class="w-4 h-4" id="play-icon"></i>
+              </button>
+              <button id="nav-next" title="1手進む" class="p-2 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 disabled:opacity-40">
+                <i data-lucide="chevron-right" class="w-4 h-4"></i>
+              </button>
+              <button id="nav-last" title="最新手" class="p-2 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 disabled:opacity-40">
+                <i data-lucide="chevrons-right" class="w-4 h-4"></i>
+              </button>
+            </div>
+            <div class="text-xs text-slate-400">
+              表示局面: <span id="nav-current-step" class="font-bold text-amber-400">0</span> / <span id="nav-total-steps">0</span> 手
+            </div>
+          </div>
+        </div>
+
+        <!-- 右カラム: 棋譜履歴 & 思考ログ (5カラム) -->
+        <div class="lg:col-span-5 space-y-4">
+          <!-- 棋譜リストカード -->
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col h-[380px]">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+              <h2 class="text-sm font-bold flex items-center gap-2">
+                <i data-lucide="scroll" class="w-4 h-4 text-amber-500"></i> 棋譜履歴
+              </h2>
+              <button id="copy-kif-btn" class="text-xs px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700 flex items-center gap-1 transition-colors">
+                <i data-lucide="copy" class="w-3.5 h-3.5"></i> 棋譜コピー
+              </button>
+            </div>
+            <!-- スクロール可能な棋譜テーブル -->
+            <div id="moves-list-container" class="flex-1 overflow-y-auto mt-2 pr-1 space-y-1 font-mono text-xs">
+              <div class="text-slate-500 text-center py-12">対局が開始されるとここに棋譜が表示されます</div>
+            </div>
+          </div>
+
+          <!-- AI思考・判定ログカード -->
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col h-[280px]">
+            <div class="flex items-center justify-between pb-2 border-b border-slate-800">
+              <h2 class="text-sm font-bold flex items-center gap-2">
+                <i data-lucide="brain" class="w-4 h-4 text-purple-400"></i> AI思考・判定詳細
+              </h2>
+              <span id="log-model-name" class="text-xs text-slate-400">--</span>
+            </div>
+            <div id="ai-log-content" class="flex-1 overflow-y-auto mt-2 text-xs text-slate-300 leading-relaxed font-sans bg-slate-950 p-3 rounded-lg border border-slate-800/80">
+              <span class="text-slate-500">直前の指し手を選択するか、対局中に思考内容が表示されます。</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 対戦履歴一覧画面 (非表示タブ) -->
+    <div id="history-view" class="hidden space-y-6">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h2 class="text-lg font-bold flex items-center gap-2">
+              <i data-lucide="history" class="w-5 h-5 text-amber-500"></i> 対戦履歴・勝敗一覧
+            </h2>
+            <p class="text-xs text-slate-400 mt-1">過去に行われた対戦の勝敗と棋譜を閲覧・再現できます。</p>
+          </div>
+          <button id="refresh-history-btn" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-medium rounded-lg text-slate-200 flex items-center gap-1.5 transition-colors">
+            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> 更新
+          </button>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm">
+            <thead class="text-xs text-slate-400 uppercase bg-slate-950/80 border-b border-slate-800">
+              <tr>
+                <th class="px-4 py-3">ID</th>
+                <th class="px-4 py-3">日時</th>
+                <th class="px-4 py-3">先手 (▲)</th>
+                <th class="px-4 py-3">後手 (△)</th>
+                <th class="px-4 py-3">勝敗 / 結果</th>
+                <th class="px-4 py-3">手数</th>
+                <th class="px-4 py-3">終了理由</th>
+                <th class="px-4 py-3 text-right">アクション</th>
+              </tr>
+            </thead>
+            <tbody id="history-table-body" class="divide-y divide-slate-800 text-slate-300">
+              <tr>
+                <td colspan="8" class="text-center py-8 text-slate-500">履歴を読み込み中...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- API設定モーダル -->
+  <div id="config-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-xl w-full p-6 shadow-2xl space-y-5">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <h3 class="text-base font-bold flex items-center gap-2">
+          <i data-lucide="settings" class="w-5 h-5 text-amber-500"></i> APIキーおよび環境変数設定
+        </h3>
+        <button id="close-config-btn" class="text-slate-400 hover:text-white p-1 rounded-lg">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <p class="text-xs text-slate-400">
+        各サービスのAPIキーを設定します。ローカルの <code>.env</code> ファイルに設定するか、こちらの画面から入力して保存できます。
+      </p>
+
+      <div class="space-y-4 text-xs">
+        <!-- OpenAI (GPT-Luna-high) -->
+        <div class="space-y-1.5 p-3 rounded-xl bg-slate-950 border border-slate-800">
+          <div class="flex items-center justify-between">
+            <label class="font-semibold text-slate-200">OpenAI API Key (GPT-Luna-high)</label>
+            <span id="cfg-openai-status" class="text-[11px] text-slate-500">未設定</span>
+          </div>
+          <input type="password" id="cfg-openai-key" placeholder="sk-..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs font-mono text-slate-200 focus:outline-none focus:ring-1 focus:ring-amber-500">
+          <div class="flex gap-2 items-center text-slate-400 text-[11px] mt-1">
+            <span>モデル名:</span>
+            <input type="text" id="cfg-openai-model" value="gpt-6-luna" class="bg-slate-900 border border-slate-700 rounded px-2 py-0.5 text-xs font-mono text-slate-300">
+          </div>
+        </div>
+
+        <!-- Google Gemini (Gemini3.8flash-high) -->
+        <div class="space-y-1.5 p-3 rounded-xl bg-slate-950 border border-slate-800">
+          <div class="flex items-center justify-between">
+            <label class="font-semibold text-slate-200">Gemini API Key (Gemini3.8flash-high)</label>
+            <span id="cfg-gemini-status" class="text-[11px] text-slate-500">未設定</span>
+          </div>
+          <input type="password" id="cfg-gemini-key" placeholder="AIza..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs font-mono text-slate-200 focus:outline-none focus:ring-1 focus:ring-amber-500">
+          <div class="flex gap-2 items-center text-slate-400 text-[11px] mt-1">
+            <span>モデル名:</span>
+            <input type="text" id="cfg-gemini-model" value="gemini-3.8-flash-high" class="bg-slate-900 border border-slate-700 rounded px-2 py-0.5 text-xs font-mono text-slate-300">
+          </div>
+        </div>
+
+        <!-- Anthropic Claude (ClaudeSonnet5) -->
+        <div class="space-y-1.5 p-3 rounded-xl bg-slate-950 border border-slate-800">
+          <div class="flex items-center justify-between">
+            <label class="font-semibold text-slate-200">Anthropic API Key (ClaudeSonnet5)</label>
+            <span id="cfg-anthropic-status" class="text-[11px] text-slate-500">未設定</span>
+          </div>
+          <input type="password" id="cfg-anthropic-key" placeholder="sk-ant-..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs font-mono text-slate-200 focus:outline-none focus:ring-1 focus:ring-amber-500">
+          <div class="flex gap-2 items-center text-slate-400 text-[11px] mt-1">
+            <span>モデル名:</span>
+            <input type="text" id="cfg-anthropic-model" value="claude-sonnet-5" class="bg-slate-900 border border-slate-700 rounded px-2 py-0.5 text-xs font-mono text-slate-300">
+          </div>
+        </div>
+
+        <!-- TypeSafe AI JEV -->
+        <div class="space-y-1.5 p-3 rounded-xl bg-slate-950 border border-slate-800">
+          <div class="flex items-center justify-between">
+            <label class="font-semibold text-slate-200">TypeSafe AI Key (JEV)</label>
+            <span id="cfg-jev-status" class="text-[11px] text-slate-500">未設定</span>
+          </div>
+          <input type="password" id="cfg-jev-key" placeholder="jev_... / Bearer Token" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs font-mono text-slate-200 focus:outline-none focus:ring-1 focus:ring-amber-500">
+          <div class="flex gap-2 items-center text-slate-400 text-[11px] mt-1">
+            <span>エンドポイント:</span>
+            <input type="text" id="cfg-jev-endpoint" value="https://api.typesafe.ai/v1/systemone" class="flex-1 bg-slate-900 border border-slate-700 rounded px-2 py-0.5 text-xs font-mono text-slate-300">
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-3 pt-2">
+        <button id="cancel-config-btn" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-xs font-semibold rounded-lg text-slate-300">
+          キャンセル
+        </button>
+        <button id="save-config-btn" class="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-xs font-semibold rounded-lg text-white shadow-md">
+          保存する
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/app.js"></script>
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

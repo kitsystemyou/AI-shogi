@@ -1,0 +1,128 @@
+/* 将棋アリーナ スタイルシート */
+
+/* 木目調の盤面外枠 */
+.shogi-board-container {
+  background: radial-gradient(circle at 50% 50%, #d4a359 0%, #b8863b 70%, #875c1d 100%);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.3);
+}
+
+/* 9x9 盤面グリッド */
+.shogi-grid {
+  width: 450px;
+  height: 480px;
+  grid-template-columns: repeat(9, 1fr);
+  grid-template-rows: repeat(9, 1fr);
+  background-color: #f1cf8c;
+  background-image: repeating-linear-gradient(0deg, transparent, transparent 52px, rgba(120, 80, 20, 0.15) 53px),
+                    repeating-linear-gradient(90deg, transparent, transparent 49px, rgba(120, 80, 20, 0.15) 50px);
+}
+
+@media (max-width: 640px) {
+  .shogi-grid {
+    width: 324px;
+    height: 350px;
+  }
+}
+
+/* 将棋の各マス目 */
+.shogi-cell {
+  border-right: 1px solid #7a501a;
+  border-bottom: 1px solid #7a501a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  user-select: none;
+  font-family: "Hiragino Mincho ProN", "Yu Mincho", "MS PMincho", serif;
+  transition: background-color 0.2s ease;
+}
+
+.shogi-cell:nth-child(9n) {
+  border-right: none;
+}
+
+.shogi-cell:nth-last-child(-n+9) {
+  border-bottom: none;
+}
+
+/* 直前の指し手マスハイライト */
+.shogi-cell.last-move-dest {
+  background-color: rgba(245, 158, 11, 0.45) !important;
+  box-shadow: inset 0 0 8px rgba(217, 119, 6, 0.6);
+}
+
+.shogi-cell.last-move-src {
+  background-color: rgba(245, 158, 11, 0.2) !important;
+}
+
+/* 将棋の駒デザイン */
+.piece {
+  font-size: 1.35rem;
+  font-weight: 900;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 90%;
+  height: 90%;
+  border-radius: 4px;
+  cursor: default;
+  transition: transform 0.15s ease;
+}
+
+@media (max-width: 640px) {
+  .piece {
+    font-size: 1.05rem;
+  }
+}
+
+/* 先手の駒（黒字、上向き） */
+.piece.sente {
+  color: #1a120b;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.4);
+}
+
+/* 後手の駒（反転・下向き） */
+.piece.gote {
+  color: #1a120b;
+  transform: rotate(180deg);
+  text-shadow: 0 -1px 1px rgba(255, 255, 255, 0.4);
+}
+
+/* 成り駒の赤字表示（と、成香、成桂、成銀、馬、竜） */
+.piece.promoted {
+  color: #b91c1c !important;
+}
+
+/* 持ち駒バッジ */
+.hand-badge {
+  display: inline-flex;
+  align-items: center;
+  background-color: rgba(180, 83, 9, 0.15);
+  border: 1px solid rgba(217, 119, 6, 0.3);
+  border-radius: 4px;
+  padding: 1px 5px;
+  margin: 1px;
+  font-size: 0.8rem;
+}
+
+/* 棋譜リストアイテム */
+.kif-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.kif-row:hover {
+  background-color: rgba(51, 65, 85, 0.5);
+}
+
+.kif-row.active {
+  background-color: rgba(217, 119, 6, 0.25);
+  border-left: 3px solid #f59e0b;
+  font-weight: bold;
+}
